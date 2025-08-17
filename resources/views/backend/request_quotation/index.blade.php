@@ -10,7 +10,7 @@
                 <div class="card px-5 py-5">
                     <div class="row justify-content-between ">
                         <div class="align-items-center col">
-                            <h2>Request for Quotation List</h2>
+                            <h2>Request for Quotation Lists</h2>
                         </div>
 {{--                        <div class="align-items-center col">--}}
 {{--                            <a href="{{ route('purchase.requisition.create') }}" class="float-right btn-primary">Create</a>--}}
