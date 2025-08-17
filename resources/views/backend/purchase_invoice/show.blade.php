@@ -13,7 +13,7 @@
     <div id="invoice-print-area">
         {{-- Invoice Info --}}
         <div class="card mb-4">
-            <div class="card-header bg-dark text-white">Invoice Information333</div>
+            <div class="card-header bg-dark text-white">Invoice Information</div>
             <div class="card-body">
                 <div class="row mb-2">
                     <div class="col-md-4"><strong>PI Number:</strong> {{ $invoice->pi_number }}</div>
@@ -92,7 +92,7 @@
                         @endforeach
                     </ul>
                 @else
-                    <p>No attachments uploaded.Change</p>
+                    <p>No attachments uploaded.</p>
                 @endif
             </div>
         </div>
