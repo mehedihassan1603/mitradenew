@@ -34,30 +34,45 @@
                     <th>Total</th>
                 </tr>
             </thead>
-            <tbody>
-                @foreach($products as $i => $productId)
-                    <tr>
-                        <td>{{ $productModels[$productId]->name ?? 'Unknown' }}</td>
-                        <td>
-                            <input type="number" name="quantities[]" class="form-control qty-input"
-                                   value="{{ $quantities[$i] ?? 0 }}" min="1"
-                                   data-price="{{ $prices[$i] ?? 0 }}">
-                        </td>
-                        <td>
-                            <input type="text" name="prices[]" class="form-control price-input"
-                                   value="{{ $prices[$i] ?? 0 }}" readonly>
-                        </td>
-                        <td class="row-total">{{ number_format(($prices[$i] ?? 0) * ($quantities[$i] ?? 0), 2) }}</td>
-                        <input type="hidden" name="product_ids[]" value="{{ $productId }}">
-                    </tr>
-                @endforeach
-            </tbody>
-            <tfoot>
-                <tr>
-                    <th colspan="3" class="text-end">Grand Total:</th>
-                    <th id="grand-total">0.00</th>
-                </tr>
-            </tfoot>
+            @php
+    $grandTotal = 0;
+@endphp
+
+<tbody>
+    @php $grandTotal = 0; @endphp
+    @foreach($products as $i => $productId)
+        @php
+            $qty = $quantities[$i] ?? 0;
+            $price = $prices[$i] ?? 0;
+            $rowTotal = $qty * $price;
+            $grandTotal += $rowTotal;
+        @endphp
+        <tr>
+            <td>{{ $productModels[$productId]->name ?? 'Unknown' }}</td>
+            <td>
+                <input type="number" name="quantities[]"
+                       class="form-control qty-input"
+                       value="{{ $qty }}" min="1">
+            </td>
+            <td>
+                <input type="text" name="prices[]"
+                       class="form-control price-input"
+                       value="{{ $price }}" readonly>
+            </td>
+            <td class="row-total">{{ $rowTotal }}</td>
+            <input type="hidden" name="product_ids[]" value="{{ $productId }}">
+        </tr>
+    @endforeach
+</tbody>
+<tfoot>
+    <tr>
+        <th colspan="3" class="text-end">Grand Total:</th>
+        <th id="grand-total">{{ $grandTotal }}</th>
+    </tr>
+</tfoot>
+
+
+
         </table>
 
         <button type="submit" class="btn btn-success">Submit Purchase Order</button>
@@ -67,23 +82,28 @@
 
 @push('scripts')
 <script>
-function calculateTotals() {
-    let grandTotal = 0;
-    document.querySelectorAll('tbody tr').forEach(row => {
-        let qty = parseFloat(row.querySelector('.qty-input').value) || 0;
-        let price = parseFloat(row.querySelector('.price-input').value) || 0;
-        let rowTotal = qty * price;
-        row.querySelector('.row-total').innerText = rowTotal.toFixed(2);
-        grandTotal += rowTotal;
+document.addEventListener("DOMContentLoaded", function () {
+    function calculateTotals() {
+        let grandTotal = 0;
+        document.querySelectorAll('tbody tr').forEach(row => {
+            let qty   = parseFloat(row.querySelector('.qty-input').value) || 0;
+            let price = parseFloat(row.querySelector('.price-input').value) || 0;
+            let rowTotal = qty * price;
+
+            row.querySelector('.row-total').innerText = rowTotal.toFixed(2);
+            grandTotal += rowTotal;
+        });
+        document.getElementById('grand-total').innerText = grandTotal.toFixed(2);
+    }
+
+    // Listen for qty changes
+    document.querySelectorAll('.qty-input').forEach(input => {
+        input.addEventListener('input', calculateTotals);
     });
-    document.getElementById('grand-total').innerText = grandTotal.toFixed(2);
-}
 
-document.querySelectorAll('.qty-input').forEach(input => {
-    input.addEventListener('input', calculateTotals);
+    // Run once at page load
+    calculateTotals();
 });
-
-// Initial calc
-calculateTotals();
 </script>
 @endpush
+

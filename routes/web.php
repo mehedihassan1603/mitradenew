@@ -266,6 +266,25 @@ Route::get('request-quotation/{requisitionId}/approve/{quoteId}',
 Route::post('purchase-order/store',
     [App\Http\Controllers\PurchaseOrderController::class, 'store'])
     ->name('purchase.order.store');
+    // routes/web.php
+Route::get('/purchase-orders', [App\Http\Controllers\PurchaseOrderController::class, 'index'])
+    ->name('purchase.order.index');
+// routes/web.php
+Route::get('/purchase-order/{id}', [App\Http\Controllers\PurchaseOrderController::class, 'show'])
+    ->name('purchase.order.show');
+
+// routes/web.php
+Route::get('/purchase-invoice/create/{poId}', [App\Http\Controllers\PurchaseInvoiceController::class, 'create'])
+    ->name('purchase.invoice.create');
+
+Route::post('/purchase-invoice/store', [App\Http\Controllers\PurchaseInvoiceController::class, 'store'])
+    ->name('purchase.invoice.store');
+
+Route::get('/purchase-invoices', [App\Http\Controllers\PurchaseInvoiceController::class, 'index'])
+    ->name('purchase.invoice.index');
+
+Route::get('/purchase-invoice/{id}', [App\Http\Controllers\PurchaseInvoiceController::class, 'show'])
+    ->name('purchase.invoice.show');
 
 
 

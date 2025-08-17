@@ -64,7 +64,7 @@
                         @if($add_permission_active)
                             <li id="purchase-create-menu"><a href="{{route('request.quotation.index')}}">{{trans('Request for Quotation')}}</a></li>
                             <li id="purchase-create-menu"><a href="#">{{trans('Quotation Comparison')}}</a></li>
-                            <li id="purchase-import-menu"><a href="#">{{trans('file.Import Purchase By CSV')}}</a></li>
+                            <li id="purchase-create-menu"><a href="{{route('purchase.order.index')}}">{{trans('Purchase Order List')}}</a></li>
                         @endif
                     </ul>
                 </li>

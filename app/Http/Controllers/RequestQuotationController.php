@@ -102,7 +102,7 @@ $quantities = is_array($requisition->quantities)
 
     $productModels = Product::whereIn('id', $products)->get()->keyBy('id');
 
-    $exporters = Supplier::where('is_exporter', 1)->get(); // assuming you have a flag for exporters
+    $exporters = Supplier::where('supplier_type', 'Exporter')->get(); // assuming you have a flag for exporters
 
     return view('backend.purchase_order.create', compact(
         'requisition', 'quotation', 'products', 'quantities', 'prices', 'productModels', 'exporters'
