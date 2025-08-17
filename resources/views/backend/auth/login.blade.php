@@ -74,7 +74,7 @@
             </form>
             <a href="{{ route('password.request') }}" class="forgot-pass">{{trans('file.Forgot Password?')}}</a>
             <p class="register-section">
-              {{trans('file.Do not have an account?')}} 
+              {{trans('file.Do not have an account?')}}
               <a href="{{url('register')}}" class="signup register-section">{{trans('file.Register')}}</a>
             </p>
           </div>
@@ -133,7 +133,7 @@
             }
         });
     @endif
-    
+
     $("div.alert").delay(4000).slideUp(800);
 
     //switch theme code
@@ -156,7 +156,7 @@
         form.submit();
     });
 
-    
+
     if ('serviceWorker' in navigator ) {
         window.addEventListener('load', function() {
             navigator.serviceWorker.register('/salepro/service-worker.js').then(function(registration) {
