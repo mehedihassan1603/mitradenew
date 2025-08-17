@@ -7,6 +7,7 @@
         <div>
             <a href="{{ route('purchase.invoice.index') }}" class="btn btn-secondary">Back to List</a>
             <button onclick="printInvoice()" class="btn btn-primary">Print</button>
+            <a href="{{ route('purchase.invoice.received', $invoice->id) }}" class="btn btn-success">Received</a>
         </div>
     </div>
 

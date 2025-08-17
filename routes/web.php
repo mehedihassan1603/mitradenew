@@ -44,6 +44,7 @@ use App\Http\Controllers\GiftCardController;
 use App\Http\Controllers\CourierController;
 use App\Http\Controllers\HolidayController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\InvoiceReceivedController;
 use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\LanguageSettingController;
 use App\Http\Controllers\LCController;
@@ -286,11 +287,11 @@ Route::get('/purchase-invoices', [App\Http\Controllers\PurchaseInvoiceController
 Route::get('/purchase-invoice/{id}', [App\Http\Controllers\PurchaseInvoiceController::class, 'show'])
     ->name('purchase.invoice.show');
 
+Route::get('purchase-invoice/{id}/received', [\App\Http\Controllers\PurchaseInvoiceController::class, 'received'])
+    ->name('purchase.invoice.received');
 
 
-
-
-
+Route::get('purchase-invoice-received/store',[InvoiceReceivedController::class,'store'])->name('purchase.invoice.received.store');
 
 
 

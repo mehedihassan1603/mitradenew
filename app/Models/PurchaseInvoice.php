@@ -24,4 +24,13 @@ class PurchaseInvoice extends Model
     {
         return $this->hasMany(PurchaseInvoiceAttachment::class);
     }
+
+
+
+
+
+
+
+
+
 }
