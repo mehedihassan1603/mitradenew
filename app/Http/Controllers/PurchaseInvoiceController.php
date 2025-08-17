@@ -71,4 +71,16 @@ class PurchaseInvoiceController extends Controller
         // dd($invoice);
         return view('backend.purchase_invoice.show', compact('invoice'));
     }
+
+    public function received($id)
+    {
+        $invoice = PurchaseInvoice::with(['order.supplier','order.exporter','attachments','order.items.product'])->findOrFail($id);
+
+        return view('backend.purchase_invoice.received', compact('invoice'));
+    }
+
+
+
+
+
 }
