@@ -13,22 +13,15 @@ class PurchaseOrderItem extends Model
         'product_id',
         'quantity',
         'price',
-        'subtotal',
     ];
 
-    /**
-     * PO relationship
-     */
-    public function order()
+    public function purchaseOrder()
     {
-        return $this->belongsTo(PurchaseOrder::class, 'purchase_order_id');
+        return $this->belongsTo(PurchaseOrder::class);
     }
 
-    /**
-     * Product relationship
-     */
     public function product()
     {
-        return $this->belongsTo(Product::class, 'product_id');
+        return $this->belongsTo(Product::class);
     }
 }
