@@ -50,48 +50,58 @@
             @endif
 
 
-            {{--exportation module start--}}
                         <?php
-                        $index_permission_active = $role_has_permissions_list->where('name', 'purchases-index')->first();
-                        ?>
-            @if($index_permission_active)
-                <li><a href="#exportation" aria-expanded="false" data-toggle="collapse"> <i class="dripicons-card"></i><span>{{trans('Exportation')}}</span></a>
-                    <ul id="exportation" class="collapse list-unstyled ">
-                        <li id="purchase-list-menu"><a href="{{ route('purchase.requisition.list') }}">{{trans('Purchase Requisition')}}</a></li>
-                            <?php
-                            $add_permission_active = $role_has_permissions_list->where('name', 'purchases-add')->first();
-                            ?>
-                        @if($add_permission_active)
-                            <li id="purchase-create-menu"><a href="{{route('request.quotation.index')}}">{{trans('Request for Quotation')}}</a></li>
-                            <li id="purchase-create-menu"><a href="#">{{trans('Quotation Comparison')}}</a></li>
-                            <li id="purchase-create-menu"><a href="{{route('purchase.order.index')}}">{{trans('Purchase Order List')}}</a></li>
-                        @endif
-                    </ul>
-                </li>
-            @endif {{--End exportation module--}}
-
-
-
-            {{--purchase module start--}}
-            <?php
-                $index_permission_active = $role_has_permissions_list->where('name', 'purchases-index')->first();
+            $index_permission_active = $role_has_permissions_list->where('name', 'purchases-index')->first();
             ?>
             @if($index_permission_active)
-            <li><a href="#purchase" aria-expanded="false" data-toggle="collapse"> <i class="dripicons-card"></i><span>{{trans('Local Purchase')}}</span></a>
-                <ul id="purchase" class="collapse list-unstyled ">
-                    <li id="purchase-list-menu"><a href="{{route('purchases.index')}}">{{trans('Purchase Requisition')}}</a></li>
-                    <?php
-                    $add_permission_active = $role_has_permissions_list->where('name', 'purchases-add')->first();
-                    ?>
-                    @if($add_permission_active)
-                    <li id="purchase-create-menu"><a href="{{route('request.quotation.index')}}">{{trans('Request for Quotation')}}</a></li>
-                    <li id="purchase-create-menu"><a href="#">{{trans('Quotation Comparison')}}</a></li>
-    {{--                <li id="purchase-create-menu"><a href="{{route('purchases.create')}}">{{trans('file.Add Purchase')}}</a></li>--}}
-                    <li id="purchase-import-menu"><a href="{{url('purchases/purchase_by_csv')}}">{{trans('file.Import Purchase By CSV')}}</a></li>
-                    @endif
-                </ul>
-            </li>
-            @endif {{--End purchase module--}}
+                <li>
+                    <a href="#procurement" aria-expanded="false" data-toggle="collapse">
+                        <i class="dripicons-card"></i><span>{{trans('Procurement')}}</span>
+                    </a>
+                    <ul id="procurement" class="collapse list-unstyled ">
+
+                        {{-- Importation --}}
+                        <li>
+                            <a href="#importation" aria-expanded="false" data-toggle="collapse">
+                                <i class="dripicons-export"></i><span>{{trans('Importation')}}</span>
+                            </a>
+                            <ul id="importation" class="collapse list-unstyled ">
+                                <li id="purchase-list-menu"><a href="{{ route('purchase.requisition.list') }}">{{trans('Purchase Requisition')}}</a></li>
+                                <?php $add_permission_active = $role_has_permissions_list->where('name', 'purchases-add')->first(); ?>
+                                @if($add_permission_active)
+                                    <li id="purchase-create-menu"><a href="{{route('request.quotation.index')}}">{{trans('Request for Quotation')}}</a></li>
+                                    <li id="purchase-create-menu"><a href="{{route('request.quotation.approved.list')}}">{{trans('Quotation Approve List')}}</a></li>
+                                    <li id="purchase-create-menu"><a href="{{route('purchase.order.index')}}">{{trans('Purchase Order List')}}</a></li>
+                                    <li id="purchase-create-menu"><a href="{{route('purchase.invoice.index')}}">{{trans('Purchase Invoice List')}}</a></li>
+                                    <li id="purchase-create-menu"><a href="{{route('purchase.invoice.received.index')}}">{{trans('Purchase Received List')}}</a></li>
+                                @endif
+                            </ul>
+                        </li>
+
+                        {{-- Local Purchase --}}
+                        <li>
+                            <a href="#localpurchase" aria-expanded="false" data-toggle="collapse">
+                                <i class="dripicons-basket"></i><span>{{trans('Local Purchase')}}</span>
+                            </a>
+                            <ul id="localpurchase" class="collapse list-unstyled ">
+                                <li id="purchase-list-menu"><a href="{{route('purchases.index')}}">{{trans('Purchase List')}}</a></li>
+                                <?php $add_permission_active = $role_has_permissions_list->where('name', 'purchases-add')->first(); ?>
+                                @if($add_permission_active)
+                                    <li id="purchase-create-menu"><a href="{{route('purchases.create')}}">{{trans('file.Add Purchase')}}</a></li>
+                                @endif
+                            </ul>
+                        </li>
+
+                       <li id="lc-management-menu">
+                            <a href="{{route('lcs.index')}}">
+                                <i class="dripicons-document"></i><span>{{trans('LC Management')}}</span>
+                            </a>
+                        </li>
+
+                    </ul>
+                </li>
+            @endif
+
 
 
 
@@ -214,11 +224,6 @@
             @endif
 
 
-
-            <li><a href="{{route('lcs.index')}}">{{trans('LC Management')}}</a></li>
-            <li><a href="{{route('banks.index')}}">{{trans('Bank Management')}}</a></li>
-            <li><a href="{{route('exporters.index')}}">{{trans('Exporter Management')}}</a></li>
-
             <?php
                 $sale_return_index_permission_active = $role_has_permissions_list->where('name', 'returns-index')->first();
 
@@ -256,6 +261,7 @@
                 @if($money_transfer_permission_active)
                 <li id="money-transfer-menu"><a href="{{route('money-transfers.index')}}">{{trans('file.Money Transfer')}}</a></li>
                 @endif
+                <li><a href="{{route('banks.index')}}">{{trans('Bank Management')}}</a></li>
                 @if($balance_sheet_permission_active)
                 <li id="balance-sheet-menu"><a href="{{route('accounts.balancesheet')}}">{{trans('file.Balance Sheet')}}</a></li>
                 @endif

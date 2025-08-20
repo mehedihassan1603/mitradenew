@@ -60,24 +60,32 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($invoice->order->items as $key => $item)
-                                        <tr>
-                                            <td>{{ $key + 1 }}</td>
-                                            <td>{{ $item->product->name ?? 'N/A' }}</td>
-                                            <td>{{ $item->quantity }}</td>
-                                            <td>{{ number_format($item->price, 2) }}</td>
-                                            <td>{{ number_format($item->quantity * $item->price, 2) }}</td>
-                                            <td>
-                                                <input type="number" name="received_qty[{{ $item->id }}]"
-                                                    value="{{ $item->quantity }}" min="0" class="form-control">
-                                            </td>
-                                        </tr>
-                                    @endforeach
+                                    @foreach ($invoice->items as $key => $item)
+    <tr>
+        <td>{{ $key + 1 }}</td>
+        <td>{{ $item->product->name ?? 'N/A' }}</td>
+        <td>{{ $item->quantity }}</td>
+        <td>{{ number_format($item->price, 2) }}</td>
+        <td>{{ number_format($item->line_total, 2) }}</td>
+        <td>
+            <input type="number" name="received_qty[{{ $item->id }}]"
+                value="{{ $item->quantity }}" min="0" class="form-control">
+        </td>
+    </tr>
+@endforeach
+
                                 </tbody>
                             </table>
 
                             {{-- Extra Input Fields --}}
                             <div class="row mt-3">
+
+                                <div class="col-md-4 mb-2">
+    <label for="transportation_cost" class="form-label">Transportation Cost</label>
+    <input type="number" name="transportation_cost" id="transportation_cost"
+           value="{{ $invoice->transportation_cost }}" class="form-control" step="0.01">
+</div>
+
 
                                 <div class="col-md-4 mb-2">
                                     <label for="custom_duty" class="form-label">Custom Duty</label>

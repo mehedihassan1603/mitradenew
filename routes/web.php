@@ -263,6 +263,13 @@ Route::post('/request-quotation/{id}', [RequestQuotationController::class, 'stor
 Route::get('request-quotation/{requisitionId}/approve/{quoteId}',
     [App\Http\Controllers\RequestQuotationController::class, 'approve'])
     ->name('request.quotation.approve');
+    Route::get('request-quotation/approved-list',
+    [App\Http\Controllers\RequestQuotationController::class, 'approvedList'])
+    ->name('request.quotation.approved.list');
+
+Route::get('purchase-order/create/{requisitionId}/{quoteId}',
+    [App\Http\Controllers\PurchaseOrderController::class, 'create'])
+    ->name('purchase.order.create');
 
 Route::post('purchase-order/store',
     [App\Http\Controllers\PurchaseOrderController::class, 'store'])
@@ -286,6 +293,11 @@ Route::get('/purchase-invoices', [App\Http\Controllers\PurchaseInvoiceController
 
 Route::get('/purchase-invoice/{id}', [App\Http\Controllers\PurchaseInvoiceController::class, 'show'])
     ->name('purchase.invoice.show');
+
+// routes/web.php
+Route::post('purchase-invoice/{id}/update-items', [App\Http\Controllers\PurchaseInvoiceController::class, 'updateItems'])
+    ->name('purchase.invoice.updateItems');
+
 
 Route::get('purchase-invoice/{id}/received', [\App\Http\Controllers\PurchaseInvoiceController::class, 'received'])
     ->name('purchase.invoice.received');

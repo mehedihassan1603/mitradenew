@@ -37,42 +37,56 @@
         </div>
 
         <h4>PO Items</h4>
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>Product</th>
-                    <th>Qty</th>
-                    <th>Unit Price</th>
-                    <th>Total</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($po->items as $item)
-                <tr>
-                    <td>{{ $item->product->name ?? '-' }}</td>
-                    <td>{{ $item->quantity }}</td>
-                    <td>{{ number_format($item->price,2) }}</td>
-                    <td>{{ number_format($item->quantity * $item->price,2) }}</td>
-                </tr>
-                @endforeach
-            </tbody>
-            <tfoot>
-                <tr>
-                    <th colspan="3" class="text-end">PO Total:</th>
-                    <th id="po_total">{{ number_format($po->total_amount,2) }}</th>
-                </tr>
-                <tr>
-                    <th colspan="3" class="text-end">Grand Total (PO + Transport):</th>
-                    <th id="grand_total">{{ number_format($po->total_amount,2) }}</th>
-                </tr>
-            </tfoot>
-        </table>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Product</th>
+            <th>Qty</th>
+            <th>Unit Price</th>
+            <th>Total</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach($po->items as $index => $item)
+        <tr>
+            <td>
+                {{ $item->product->name ?? '-' }}
+                <input type="hidden" name="items[{{ $index }}][product_id]" value="{{ $item->product_id }}">
+            </td>
+            <td>
+                <input type="number" name="items[{{ $index }}][quantity]"
+                       class="form-control qty-input"
+                       value="{{ $item->quantity }}"
+                       min="1" step="1"
+                       data-price="{{ $item->price }}">
+            </td>
+            <td>
+                <input type="hidden" name="items[{{ $index }}][price]" value="{{ $item->price }}">
+                {{ number_format($item->price,2) }}
+            </td>
+            <td class="line-total">{{ number_format($item->quantity * $item->price,2) }}</td>
+        </tr>
+        @endforeach
+    </tbody>
+    <tfoot>
+        <tr>
+            <th colspan="3" class="text-end">PO Total:</th>
+            <th id="po_total">{{ number_format($po->total_amount,2) }}</th>
+        </tr>
+        <tr>
+            <th colspan="3" class="text-end">Grand Total (PO + Transport):</th>
+            <th id="grand_total">{{ number_format($po->total_amount,2) }}</th>
+        </tr>
+    </tfoot>
+</table>
+
 
         <button type="submit" class="btn btn-success">Create Purchase Invoice</button>
     </form>
 </div>
 
 <script>
+
     function generatePiNumber() {
         let now = new Date();
         let random = Math.floor(1000 + Math.random() * 9000); // 4 digit random
@@ -80,14 +94,32 @@
                  now.getDate().toString().padStart(2,'0') + "-" + random;
         document.getElementById("pi_number").value = pi;
     }
+    function recalcTotals() {
+        let poTotal = 0;
 
-    function updateGrandTotal() {
-        let poTotal = parseFloat("{{ $po->total_amount }}");
+        document.querySelectorAll('.qty-input').forEach(function(input) {
+            let qty = parseFloat(input.value) || 0;
+            let price = parseFloat(input.dataset.price) || 0;
+            let lineTotal = qty * price;
+
+            // update row total
+            input.closest('tr').querySelector('.line-total').innerText = lineTotal.toFixed(2);
+
+            poTotal += lineTotal;
+        });
+
+        document.getElementById("po_total").innerText = poTotal.toFixed(2);
+
         let transport = parseFloat(document.getElementById("transportation_cost").value) || 0;
         let grandTotal = poTotal + transport;
         document.getElementById("grand_total").innerText = grandTotal.toFixed(2);
     }
 
-    document.getElementById("transportation_cost").addEventListener("input", updateGrandTotal);
+    document.querySelectorAll('.qty-input').forEach(function(input) {
+        input.addEventListener("input", recalcTotals);
+    });
+
+    document.getElementById("transportation_cost").addEventListener("input", recalcTotals);
 </script>
+
 @endsection

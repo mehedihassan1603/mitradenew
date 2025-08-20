@@ -85,29 +85,56 @@ $quantities = is_array($requisition->quantities)
     }
 
 
-    public function approve($requisitionId, $quoteId)
+//     public function approve($requisitionId, $quoteId)
+// {
+//     $requisition = PurchaseRequisition::findOrFail($requisitionId);
+//     $quotation   = RequestQuotation::with('supplier')->findOrFail($quoteId);
+
+//     $products = is_array($requisition->product_id)
+//         ? $requisition->product_id
+//         : (json_decode($requisition->product_id, true) ?? []);
+
+//     $quantities = is_array($requisition->quantities)
+//         ? $requisition->quantities
+//         : (json_decode($requisition->quantities, true) ?? []);
+
+//     $prices = json_decode($quotation->prices, true) ?? [];
+
+//     $productModels = Product::whereIn('id', $products)->get()->keyBy('id');
+
+//     $exporters = Supplier::where('supplier_type', 'Exporter')->get(); // assuming you have a flag for exporters
+
+//     return view('backend.purchase_order.create', compact(
+//         'requisition', 'quotation', 'products', 'quantities', 'prices', 'productModels', 'exporters'
+//     ));
+// }
+
+public function approve($requisitionId, $quoteId)
 {
     $requisition = PurchaseRequisition::findOrFail($requisitionId);
     $quotation   = RequestQuotation::with('supplier')->findOrFail($quoteId);
 
-    $products = is_array($requisition->product_id)
-        ? $requisition->product_id
-        : (json_decode($requisition->product_id, true) ?? []);
+    // Mark this quotation as approved
+    $quotation->status = 'approved';
+    $quotation->save();
 
-    $quantities = is_array($requisition->quantities)
-        ? $requisition->quantities
-        : (json_decode($requisition->quantities, true) ?? []);
+    // (Optional) Also update requisition status
+    $requisition->status = 'approved';
+    $requisition->save();
 
-    $prices = json_decode($quotation->prices, true) ?? [];
-
-    $productModels = Product::whereIn('id', $products)->get()->keyBy('id');
-
-    $exporters = Supplier::where('supplier_type', 'Exporter')->get(); // assuming you have a flag for exporters
-
-    return view('backend.purchase_order.create', compact(
-        'requisition', 'quotation', 'products', 'quantities', 'prices', 'productModels', 'exporters'
-    ));
+    return redirect()->route('request.quotation.approved.list')
+        ->with('success', 'Quotation approved successfully.');
 }
+public function approvedList()
+{
+    $approvedQuotations = RequestQuotation::with(['supplier', 'requisition'])
+        ->where('status', 'approved')
+        ->orderBy('id', 'desc')
+        ->get();
+
+    return view('backend.request_quotation.approved_list', compact('approvedQuotations'));
+}
+
 
 
 

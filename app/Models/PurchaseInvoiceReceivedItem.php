@@ -11,7 +11,9 @@ class PurchaseInvoiceReceivedItem extends Model
     protected $fillable = [
         'received_id',
         'item_id',
+        'product_id',
         'received_qty',
+        'unit_price'
     ];
 
     public function received()

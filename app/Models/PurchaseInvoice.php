@@ -20,6 +20,12 @@ class PurchaseInvoice extends Model
         return $this->belongsTo(PurchaseOrder::class, 'purchase_order_id');
     }
 
+    public function items()
+{
+    return $this->hasMany(PurchaseInvoiceItem::class, 'purchase_invoice_id');
+}
+
+
     public function attachments()
     {
         return $this->hasMany(PurchaseInvoiceAttachment::class);
