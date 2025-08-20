@@ -41,12 +41,21 @@
                                 @if($rec->status == 0)
                                     <form action="{{ route('purchase.invoice.received.approve', $rec->id) }}" method="POST">
                                         @csrf
-                                        <button type="submit" class="btn btn-success btn-sm">Approve</button>
+                                        <div class="d-flex">
+                                            <select name="warehouse_id" class="form-select form-select-sm me-2" required>
+                                                <option value="">-- Select Warehouse --</option>
+                                                @foreach($warehouses as $wh)
+                                                    <option value="{{ $wh->id }}">{{ $wh->name }}</option>
+                                                @endforeach
+                                            </select>
+                                            <button type="submit" class="btn btn-success btn-sm">Approve</button>
+                                        </div>
                                     </form>
                                 @else
                                     <span class="badge bg-success">Approved</span>
                                 @endif
                             </td>
+
 
                         </tr>
                     @empty

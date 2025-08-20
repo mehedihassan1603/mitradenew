@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Product;
 use App\Models\PurchaseOrder;
 use App\Models\PurchaseOrderItem;
+use App\Models\PurchaseRequisition;
+use App\Models\RequestQuotation;
+use App\Models\Supplier;
 use Illuminate\Http\Request;
 
 class PurchaseOrderController extends Controller
@@ -17,6 +21,36 @@ class PurchaseOrderController extends Controller
 
     return view('backend.purchase_order.index', compact('purchaseOrders'));
 }
+
+public function create($requisitionId, $quoteId)
+{
+    $requisition = PurchaseRequisition::findOrFail($requisitionId);
+    $quotation   = RequestQuotation::with('supplier')->findOrFail($quoteId);
+
+    // Handle products
+    $products = is_array($requisition->product_id)
+        ? $requisition->product_id
+        : (json_decode($requisition->product_id, true) ?? []);
+
+    // Handle quantities
+    $quantities = is_array($requisition->quantities)
+        ? $requisition->quantities
+        : (json_decode($requisition->quantities, true) ?? []);
+
+    // Handle prices
+    $prices = is_array($quotation->prices)
+        ? $quotation->prices
+        : (json_decode($quotation->prices, true) ?? []);
+
+    $productModels = Product::whereIn('id', $products)->get()->keyBy('id');
+    $exporters = Supplier::where('supplier_type', 'Exporter')->get();
+
+    return view('backend.purchase_order.create', compact(
+        'requisition', 'quotation', 'products', 'quantities', 'prices', 'productModels', 'exporters'
+    ));
+}
+
+
 public function show($id)
 {
     $po = PurchaseOrder::with(['supplier', 'exporter', 'items.product'])
@@ -67,7 +101,7 @@ public function show($id)
             ]);
         }
 
-        return redirect()->route('request.quotation.index')
+        return redirect()->route('purchase.order.index')
             ->with('success', 'Purchase Order created successfully!');
     }
 }
