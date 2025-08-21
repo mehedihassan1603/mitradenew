@@ -22,6 +22,23 @@ class PurchaseRequisition extends Model
         'product_id' => 'array',
         'quantities' => 'array',
     ];
+
+
+    public function suppliers()
+    {
+        return $this->hasMany(RequestQuotation::class, 'purchase_requisition_id');
+
+    }
+
+
+
+
+
+
+
+
+
+
 }
 
 

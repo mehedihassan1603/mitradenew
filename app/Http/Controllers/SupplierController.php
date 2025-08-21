@@ -163,7 +163,7 @@ class SupplierController extends Controller
                 $message .= ' created successfully. Please setup your <a href="setting/mail_setting">mail setting</a> to send mail.';
             }
         }
-        return redirect('supplier')->with('message', $message);
+        return redirect('supplier')->with('success','Data Added Successfully');
     }
 
     public function edit($id)
