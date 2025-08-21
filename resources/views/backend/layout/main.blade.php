@@ -12,6 +12,30 @@
   <meta name="robots" content="all,follow">
   <meta name="csrf-token" content="{{ csrf_token() }}">
   <!-- Bootstrap CSS-->
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+
+        <style>
+            /* Error toast background red */
+            #toast-container > .toast-error {
+                background-color: #e3342f !important; /* Bootstrap danger red */
+                color: #fff !important;
+            }
+            /* Error toast background red */
+            #toast-container > .toast-success {
+                background-color: green !important; /* Bootstrap danger red */
+                color: #fff !important;
+            }
+
+            #toast-container > div {
+                width: 400px !important;   /* default প্রায় 300px */
+            }
+
+        </style>
+
+
+
+
   <link rel="stylesheet" href="<?php echo asset('vendor/bootstrap/css/bootstrap.min.css') ?>" type="text/css">
   <link rel="preload" href="<?php echo asset('vendor/bootstrap-toggle/css/bootstrap-toggle.min.css') ?>" as="style" onload="this.onload=null;this.rel='stylesheet'">
   <noscript>
@@ -1403,6 +1427,38 @@
       };
 
   </script>
+
+
+{{--  toastr start--}}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+  <script>
+      document.addEventListener('DOMContentLoaded', function () {
+          // Optional: Toastr options
+          toastr.options = {
+              "positionClass": "toast-top-right",
+              "timeOut": 3000
+          };
+
+          @if(session('success'))
+          toastr.success({!! json_encode(session('success')) !!});
+          @endif
+
+          @if(session('error'))
+          toastr.error({!! json_encode(session('error')) !!});
+          @endif
+
+          @if($errors->any())
+          @foreach ($errors->all() as $error)
+          toastr.error({!! json_encode($error) !!});
+          @endforeach
+          @endif
+      });
+  </script>
+
+
+
+
+
 
 </body>
 

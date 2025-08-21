@@ -8,33 +8,31 @@ use App\Models\PurchaseOrder;
 use App\Models\PurchaseRequisition;
 use App\Models\RequestQuotation;
 use App\Models\Supplier;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class RequestQuotationController extends Controller
 {
     public function index() {
-        $requisitions = PurchaseRequisition::orderBy('id', 'desc')->get();
+
+        $requisitions = PurchaseRequisition::orderBy('id', 'desc')->with('suppliers.supplier')->get();
         return view('backend.request_quotation.index', compact('requisitions'));
     }
 
     public function create($requisitionId) {
-        $requisition = PurchaseRequisition::findOrFail($requisitionId);
-        // $products = json_decode($requisition->product_id, true) ?? [];
-        // $quantities = json_decode($requisition->quantities, true) ?? [];
+            $requisition = PurchaseRequisition::findOrFail($requisitionId);
 
-        $products = is_array($requisition->product_id)
-    ? $requisition->product_id
-    : (json_decode($requisition->product_id, true) ?? []);
+            $products = is_array($requisition->product_id) ? $requisition->product_id
+            : (json_decode($requisition->product_id, true) ?? []);
 
-$quantities = is_array($requisition->quantities)
-    ? $requisition->quantities
-    : (json_decode($requisition->quantities, true) ?? []);
+            $quantities = is_array($requisition->quantities) ? $requisition->quantities
+            : (json_decode($requisition->quantities, true) ?? []);
 
-        $suppliers = Supplier::all(); // your supplier table
+            $suppliers = Supplier::all();
 
-        return view('backend.request_quotation.create', compact(
-            'requisition', 'products', 'quantities', 'suppliers'
-        ));
+            return view('backend.request_quotation.create', compact(
+                'requisition', 'products', 'quantities', 'suppliers'
+            ));
     }
 
     public function store(Request $request, $requisitionId) {
@@ -42,21 +40,33 @@ $quantities = is_array($requisition->quantities)
             'supplier_id' => 'required|exists:suppliers,id',
             'prices' => 'required|array',
             'prices.*' => 'numeric|min:0',
+            'date' => 'nullable|date',
+            'total_price' => 'nullable',
         ]);
 
         $requisition = PurchaseRequisition::findOrFail($requisitionId);
 
+        // ✅ আগে check করা হচ্ছে একই supplier এর quotation আছে কিনা
+        $exists = RequestQuotation::where('purchase_requisition_id', $requisition->id)->where('supplier_id', $request->supplier_id)->exists();
+
+        if ($exists) {
+            return redirect()->back()->with('error', 'This supplier already has a Quotation');
+        }
+
+        // ✅ না থাকলে create করা হবে
         RequestQuotation::create([
             'purchase_requisition_id' => $requisition->id,
             'supplier_id' => $request->supplier_id,
             'product_ids' => $requisition->product_id,
             'quantities' => $requisition->quantities,
             'prices' => json_encode($request->prices),
+            'date' => $request->date ?? Carbon::now()->format('Y-m-d'),
+            'total_price' => $request->total_price,
         ]);
 
-        return redirect()->route('request.quotation.index')
-            ->with('success', 'Supplier Quotation Added Successfully!');
+        return redirect()->route('request.quotation.index')->with('success', 'Supplier Quotation Added Successfully!');
     }
+
 
     public function compare($requisitionId)
     {
@@ -70,44 +80,16 @@ $quantities = is_array($requisition->quantities)
             ? $requisition->quantities
             : (json_decode($requisition->quantities, true) ?? []);
 
-
         $quotations = RequestQuotation::with('supplier')
             ->where('purchase_requisition_id', $requisitionId)
             ->get();
 
-
-        // Build product models for display
         $productModels = Product::whereIn('id', $products)->get()->keyBy('id');
 
         return view('backend.request_quotation.compare', compact(
             'requisition', 'products', 'quantities', 'quotations', 'productModels'
         ));
     }
-
-
-//     public function approve($requisitionId, $quoteId)
-// {
-//     $requisition = PurchaseRequisition::findOrFail($requisitionId);
-//     $quotation   = RequestQuotation::with('supplier')->findOrFail($quoteId);
-
-//     $products = is_array($requisition->product_id)
-//         ? $requisition->product_id
-//         : (json_decode($requisition->product_id, true) ?? []);
-
-//     $quantities = is_array($requisition->quantities)
-//         ? $requisition->quantities
-//         : (json_decode($requisition->quantities, true) ?? []);
-
-//     $prices = json_decode($quotation->prices, true) ?? [];
-
-//     $productModels = Product::whereIn('id', $products)->get()->keyBy('id');
-
-//     $exporters = Supplier::where('supplier_type', 'Exporter')->get(); // assuming you have a flag for exporters
-
-//     return view('backend.purchase_order.create', compact(
-//         'requisition', 'quotation', 'products', 'quantities', 'prices', 'productModels', 'exporters'
-//     ));
-// }
 
 public function approve($requisitionId, $quoteId)
 {
@@ -134,6 +116,21 @@ public function approvedList()
 
     return view('backend.request_quotation.approved_list', compact('approvedQuotations'));
 }
+
+
+    public function delete($id)
+    {
+        $deleted = RequestQuotation::where('purchase_requisition_id', $id)->delete();
+
+        if ($deleted) {
+            return redirect()->route('request.quotation.index')
+                ->with('success', 'Purchase Requisition deleted successfully!');
+        } else {
+            return redirect()->route('request.quotation.index')
+                ->with('error', 'No record found to delete!');
+        }
+    }
+
 
 
 

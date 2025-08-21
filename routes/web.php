@@ -53,6 +53,7 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PayrollController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\PurchaseController;
+use App\Http\Controllers\PurchaseRequisitionController;
 use App\Http\Controllers\QuotationController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ReturnController;
@@ -248,11 +249,16 @@ Route::group(['middleware' => ['common', 'auth', 'active']], function() {
     Route::get('/purchase-requisition/create',[\App\Http\Controllers\PurchaseRequisitionController::class,'create'])->name('purchase.requisition.create');
     Route::post('/purchase-requisition/store',[\App\Http\Controllers\PurchaseRequisitionController::class,'store'])->name('purchase.requisition.store');
     Route::get('/purchase-requisition/print/{id}',[\App\Http\Controllers\PurchaseRequisitionController::class,'print'])->name('purchase.requisition.print');
+    Route::get('/purchase-requisition/edit/{id}',[\App\Http\Controllers\PurchaseRequisitionController::class,'edit'])->name('purchase.requisition.edit');
+    Route::put('/purchase-requisition/{id}', [PurchaseRequisitionController::class, 'update'])->name('purchase-requisition.update');
+
+
 
     Route::get('/request-quotation/list',[RequestQuotationController::class,'index'])->name('request.quotation.index');
     // Route::get('/request-quotation', [RequestQuotationController::class, 'index'])->name('request.quotation.index');
 Route::get('/request-quotation/{id}/create', [RequestQuotationController::class, 'create'])->name('request.quotation.create');
 Route::post('/request-quotation/{id}', [RequestQuotationController::class, 'store'])->name('request.quotation.store');
+Route::get('/request-quotation/delete/{id}', [RequestQuotationController::class, 'delete'])->name('request-quotation.delete');
 // Route::get('/request-quotation/{id}/compare', [RequestQuotationController::class, 'compare'])
 //     ->name('request.quotation.compare');
  Route::get('compare/{requisition}', [RequestQuotationController::class, 'compare'])->name('foreign-quotations.compare');
@@ -267,14 +273,12 @@ Route::get('request-quotation/{requisitionId}/approve/{quoteId}',
     [App\Http\Controllers\RequestQuotationController::class, 'approvedList'])
     ->name('request.quotation.approved.list');
 
-Route::get('purchase-order/create/{requisitionId}/{quoteId}',
-    [App\Http\Controllers\PurchaseOrderController::class, 'create'])
+Route::get('purchase-order/create/{requisitionId}/{quoteId}', [App\Http\Controllers\PurchaseOrderController::class, 'create'])
     ->name('purchase.order.create');
 
 Route::post('purchase-order/store',
-    [App\Http\Controllers\PurchaseOrderController::class, 'store'])
-    ->name('purchase.order.store');
-    // routes/web.php
+    [App\Http\Controllers\PurchaseOrderController::class, 'store'])->name('purchase.order.store');
+
 Route::get('/purchase-orders', [App\Http\Controllers\PurchaseOrderController::class, 'index'])
     ->name('purchase.order.index');
 // routes/web.php

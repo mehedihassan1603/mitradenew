@@ -16,6 +16,7 @@ class PurchaseOrder extends Model
         'order_date',
         'status',
         'total_amount',
+        'po_id',
     ];
 
     public function items()

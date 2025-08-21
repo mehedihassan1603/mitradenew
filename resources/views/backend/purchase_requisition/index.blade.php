@@ -39,6 +39,7 @@
                                     <td>{{ $totalQuantity }}</td>
                                     <td>
                                         <a href="{{ route('purchase.requisition.print',['id' => $req->id ]) }}" class="btn btn-sm btn-primary">View</a>
+                                        <a href="{{ route('purchase.requisition.edit',['id' => $req->id ]) }}" class="btn btn-sm btn-primary">Edit</a>
                                         <a href="#" class="btn btn-sm btn-danger">Delete</a>
                                     </td>
                                 </tr>

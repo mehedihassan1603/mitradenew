@@ -17,6 +17,7 @@ class RequestQuotation extends Model
         'product_ids',
         'quantities',
         'prices',
+        'date',
     ];
 
     protected $casts = [
