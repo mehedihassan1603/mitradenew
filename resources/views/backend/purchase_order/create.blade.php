@@ -6,23 +6,51 @@
 
     <form action="{{ route('purchase.order.store') }}" method="POST">
         @csrf
-        <input type="hidden" name="requisition_id" value="{{ $requisition->id }}">
+
         <input type="hidden" name="quotation_id" value="{{ $quotation->id }}">
 
-        <div class="mb-3">
-            <label>Supplier</label>
-            <input type="text" class="form-control" value="{{ $quotation->supplier->name }}" readonly>
-            <input type="hidden" name="supplier_id" value="{{ $quotation->supplier_id }}">
-        </div>
+        <div class="row">
 
-        <div class="mb-3">
-            <label>Exporter</label>
-            <select name="exporter_id" class="form-control" required>
-                <option value="">-- Select Exporter --</option>
-                @foreach($exporters as $exporter)
-                    <option value="{{ $exporter->id }}">{{ $exporter->name }}</option>
-                @endforeach
-            </select>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>{{ trans('file.Date') }}</label>
+                    <input type="date" name="date" id="date" class="form-control" />
+                </div>
+            </div>
+
+            <div class="mb-3 col-md-6">
+                <label>Requisition ID</label>
+                <input type="text" name="requisition_id" class="form-control" value="{{ $requisition->ref_id }}" readonly>
+                <input type="hidden" name="requisition_id" value="{{ $requisition->id }}">
+            </div>
+
+            <div class="mb-3 col-md-6">
+                <div class="form-group">
+                    <label>Purchase Order ID</label>
+                    <div class="input-group">
+                        <input type="text" name="po_id" id="po_id" class="form-control" required/>
+                        <button type="button" class="btn btn-primary" id="generateBtn">Generate</button>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="mb-3 col-md-6">
+                <label>Supplier</label>
+                <input type="text" class="form-control" value="{{ $quotation->supplier->name }}" readonly>
+                <input type="hidden" name="supplier_id" value="{{ $quotation->supplier_id }}">
+            </div>
+
+            <div class="mb-3 col-md-6">
+                <label>Exporter</label>
+                <select name="exporter_id" class="form-control" required>
+                    <option value="">-- Select Exporter --</option>
+                    @foreach($exporters as $exporter)
+                        <option value="{{ $exporter->id }}">{{ $exporter->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+
         </div>
 
         <table class="table table-bordered">
@@ -66,7 +94,7 @@
 </tbody>
 <tfoot>
     <tr>
-        <th colspan="3" class="text-end">Grand Total:</th>
+        <th colspan="3" class="text-right">Grand Total</th>
         <th id="grand-total">{{ $grandTotal }}</th>
     </tr>
 </tfoot>
@@ -104,6 +132,29 @@ document.addEventListener("DOMContentLoaded", function () {
     // Run once at page load
     calculateTotals();
 });
+
+
+{{--  generate po_id method  --}}
+let generatedNumbers = [];
+
+function generateUniqueNumber() {
+    let number;
+    do {
+        number = Math.floor(100000 + Math.random() * 900000); // 6-digit
+    } while (generatedNumbers.includes(number)); // check duplicate
+
+    generatedNumbers.push(number); // store number
+    return number;
+}
+
+document.getElementById('generateBtn').addEventListener('click', function() {
+    const uniqueNumber = generateUniqueNumber();
+    document.getElementById('po_id').value = 'PO-' + uniqueNumber;
+}); {{-- End generate po_id method --}}
+
+
+
+
 </script>
 @endpush
 

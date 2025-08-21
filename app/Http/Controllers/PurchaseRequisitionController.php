@@ -15,14 +15,11 @@ class PurchaseRequisitionController extends Controller
         return view('backend.purchase_requisition.index', compact('requisitions'));
     }
 
-
     public function create()
     {
-
         $products = Product::select('id', 'name', 'code')->get();
         return view('backend.purchase_requisition.create', compact('products'));
     }
-
 
     public function store(Request $request)
     {
@@ -62,6 +59,37 @@ class PurchaseRequisitionController extends Controller
     }
 
 
+    public function edit($id)
+    {
+        $purchaseRequisition = PurchaseRequisition::find($id);
+        $products = Product::select('id', 'name', 'code')->get();
+        return view('backend.purchase_requisition.edit',compact('purchaseRequisition','products'));
+
+    }
+
+    public function update(Request $request, $id)
+    {
+        $purchaseRequisition = PurchaseRequisition::findOrFail($id);
+
+        $request->validate([
+            'date' => 'nullable|date', // nullable দিলে empty থাকলেও চলবে
+            'ref_id' => 'required|string',
+            'product_name' => 'required|array',
+            'product_name.*' => 'exists:products,id',
+            'quantities' => 'required|array',
+            'quantities.*' => 'numeric|min:1'
+        ]);
+
+        $purchaseRequisition->update([
+            'date' => $request->date ?? $purchaseRequisition->date,
+            'ref_id' => $request->ref_id,
+            'product_id' => array_values($request->product_name),
+            'quantities' => array_values($request->quantities),
+        ]);
+
+        return redirect()->route('purchase.requisition.index')
+            ->with('success', 'Purchase Requisition Updated Successfully!');
+    }
 
 
 

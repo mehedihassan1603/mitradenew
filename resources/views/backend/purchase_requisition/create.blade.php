@@ -1,5 +1,6 @@
 @extends('backend.layout.main')
 
+
 @section('content')
     <div class="row">
         <div class="card">
@@ -26,6 +27,7 @@
                                 </div>
                             </div>
                         </div>
+
                     </div>
 
                     <div class="form-group row mb-4 col-md-12">
@@ -33,11 +35,12 @@
                         <select class="form-control" multiple name="product_name[]" id="product_name">
                             @foreach($products as $product)
                                 <option value="{{ $product->id }}" data-code="{{ $product->code }}">
-                                    {{ $product->name }}
+                                    {{ $product->name }} <strong>( Code- {{ $product->code }} )</strong>
                                 </option>
                             @endforeach
                         </select>
                     </div>
+
 
                     <h4>Product Table List</h4>
                     <table class="table table-bordered mt-4" id="productTable">
@@ -70,7 +73,12 @@
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 
 
+
+
+
     <script>
+
+
         let productQuantities = {}; // প্রতিটি product এর quantity save
         let selectedProducts = {}; // table এ add হওয়া products track
 

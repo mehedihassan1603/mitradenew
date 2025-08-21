@@ -8,6 +8,7 @@ use App\Models\PurchaseOrderItem;
 use App\Models\PurchaseRequisition;
 use App\Models\RequestQuotation;
 use App\Models\Supplier;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class PurchaseOrderController extends Controller
@@ -65,11 +66,13 @@ public function show($id)
         $request->validate([
             'requisition_id' => 'required|integer',
             'quotation_id'   => 'required|integer',
+            'po_id'          => 'required|string',
             'supplier_id'    => 'required|integer',
             'exporter_id'    => 'required|integer',
             'product_ids'    => 'required|array',
             'quantities'     => 'required|array',
             'prices'         => 'required|array',
+            'date'           => 'nullable',
         ]);
 
         // Calculate total
@@ -84,9 +87,10 @@ public function show($id)
         $po = PurchaseOrder::create([
             'purchase_requisition_id' => $request->requisition_id,
             'request_quotation_id'    => $request->quotation_id,
+            'po_id'                   => $request->po_id,
             'supplier_id'             => $request->supplier_id,
             'exporter_id'             => $request->exporter_id,
-            'order_date'              => now(),
+            'order_date'              => $request->date ?? Carbon::now()->format('Y-m-d'),
             'status'                  => 'draft', // you can use pending/approved/etc
             'total_amount'            => $total,
         ]);
