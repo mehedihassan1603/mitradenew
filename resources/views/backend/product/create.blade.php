@@ -121,11 +121,11 @@
                                     </div>
                                 </div><div class="col-md-4">
                                     <div class="form-group">
-                                        <label>{{trans('HS Code')}}</strong> </label>
+                                        <label>{{trans('HS Code')}}</label>
                                         <div class="input-group pos">
                                           <select name="hscode" class="selectpicker form-control" data-live-search="true" data-live-search-style="begins" title="Select HS Code...">
-                                            @foreach($hscodes as $brand)
-                                                <option value="{{$brand->id}}">{{$brand->name}}</option>
+                                            @foreach($hscodes as $hscode)
+                                                <option value="{{$hscode->id}}">{{$hscode->name}} (VAT-{{ $hscode->value }}%)</option>
                                             @endforeach
                                           </select>
                                         </div>

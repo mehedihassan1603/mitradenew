@@ -49,5 +49,9 @@ class Product extends Model
 {
     return $this->hasMany(Rating::class);
 }
+    public function hscode()
+    {
+        return $this->belongsTo(HSCode::class, 'hscode');
+    }
 
 }

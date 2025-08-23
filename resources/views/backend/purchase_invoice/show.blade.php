@@ -87,9 +87,7 @@
                         <ul>
                             @foreach ($invoice->attachments as $file)
                                 <li>
-                                    <a href="{{ asset($file->file_path) }}" target="_blank">
-                                        {{ basename($file->file_path) }}
-                                    </a>
+                                    <a href="{{ asset($file->file_path) }}" target="_blank">{{ basename($file->file_path) }}</a>
                                 </li>
                             @endforeach
                         </ul>
@@ -99,8 +97,7 @@
                 </div>
             </div>
         </div>
-        <a href="{{ route('purchase.invoice.received', $invoice->id) }}" class="btn btn-success text-center w-100">Received</a>
-
+        <a href="{{ route('purchase.invoice.received', $invoice->id) }}" class="btn btn-success">Received</a>
     </div>
 @endsection
 
