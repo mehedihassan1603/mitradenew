@@ -17,7 +17,7 @@
                             <table class="table table-bordered mb-0">
                                 <tbody>
                                     <tr>
-                                        <th width="30%">PI Number</th>
+                                        <th>PI Number</th>
                                         <td>{{ $invoice->pi_number }}</td>
                                     </tr>
                                     <tr>
@@ -28,9 +28,8 @@
                                         <th>Notes</th>
                                         <td>{{ $invoice->notes ?? '-' }}</td>
                                     </tr>
-
                                     <tr>
-                                        <th width="30%">Supplier</th>
+                                        <th>Supplier</th>
                                         <td>{{ $invoice->order->supplier->name ?? '-' }}</td>
                                     </tr>
                                     <tr>
@@ -51,130 +50,80 @@
                             <table class="table table-bordered">
                                 <thead>
                                     <tr>
-                                        <th>#</th>
-                                        <th>Product</th>
-                                        <th>Qty</th>
-                                        <th>Unit Price</th>
-                                        <th>Total</th>
-                                        <th>Received Qty</th> {{-- Extra input field --}}
+                                        <th style="width: 0%">#</th>
+                                        <th style="width: 26%">Product</th>
+                                        <th style="width: 3%">HS Code</th>
+                                        <th style="width: 1%">Qty</th>
+                                        <th style="width: 4%">Unit Price</th>
+                                        <th style="width: 1%">VAT</th>
+                                        <th style="width: 7%">Total (with VAT)</th>
+                                        <th style="width: 4%">Received Qty</th> {{-- Extra input field --}}
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach ($invoice->items as $key => $item)
-    <tr>
-        <td>{{ $key + 1 }}</td>
-        <td>{{ $item->product->name ?? 'N/A' }}</td>
-        <td>{{ $item->quantity }}</td>
-        <td>{{ number_format($item->price, 2) }}</td>
-        <td>{{ number_format($item->line_total, 2) }}</td>
-        <td>
-            <input type="number" name="received_qty[{{ $item->id }}]"
-                value="{{ $item->quantity }}" min="0" class="form-control">
-        </td>
-    </tr>
-@endforeach
+                                        <tr>
+                                            <td>{{ $key + 1 }}</td>
+                                            <td>{{ $item->product->name ?? 'N/A' }} <br><strong>(Code-{{$item->product->code  }})</strong></td>
+                                            <td>{{ $item->product->hs->name ?? '' }}</td>
+                                            <td>{{ $item->quantity }}</td>
+                                            <td>{{ number_format($item->price, 2) }}</td>
+                                            <td>{{ $item->product->hs->value ?? '' }}</td>
+                                            <td>
+                                                {{ number_format(
+                                                    $item->line_total + ($item->line_total * ($item->product->hs->value ?? 0) / 100),
+                                                    2
+                                                ) }}
+                                            </td>
 
+                                            <td>
+                                                <input type="number" name="received_qty[{{ $item->id }}]" value="{{ $item->quantity }}" min="0" class="form-control">
+                                            </td>
+                                        </tr>
+                                    @endforeach
                                 </tbody>
                             </table>
 
-                            {{-- Extra Input Fields --}}
-                            <div class="row mt-3">
+                            {{-- BL Number --}}
+<div class="row mb-3">
+    <div class="col-md-6">
+        <label for="bl_number" class="form-label">BL Number</label>
+        <input type="text" name="bl_number" id="bl_number" class="form-control" required>
+    </div>
 
-                                <div class="col-md-4 mb-2">
-    <label for="transportation_cost" class="form-label">Transportation Cost</label>
-    <input type="number" name="transportation_cost" id="transportation_cost"
-           value="{{ $invoice->transportation_cost }}" class="form-control" step="0.01">
+    {{-- LC Dropdown --}}
+    <div class="col-md-6">
+        <label for="lc_id" class="form-label">LC Number</label>
+        <select name="lc_id" id="lc_id" class="form-control" required>
+            <option value="">Select LC</option>
+            @foreach($lcs as $lc)
+                <option value="{{ $lc->id }}" data-amount="{{ $lc->lc_amount }}">{{ $lc->lc_number }}</option>
+            @endforeach
+        </select>
+        <input type="number" id="lc_amount" class="form-control mt-2" placeholder="LC Amount" readonly>
+    </div>
 </div>
 
-
+                            {{-- Extra Input Fields --}}
+                            <div class="row mt-3">
                                 <div class="col-md-4 mb-2">
-                                    <label for="custom_duty" class="form-label">Custom Duty</label>
-                                    <input type="number" name="custom_duty" id="custom_duty" class="form-control"
-                                        step="0.01">
-                                </div>
-
-                                <div class="col-md-4 mb-2">
-                                    <label for="vat" class="form-label">VAT</label>
-                                    <input type="number" name="vat" id="vat" class="form-control" step="0.01">
-                                </div>
-
-
-                                <div class="col-md-4 mb-2">
-                                    <label for="supplementary_duty" class="form-label">Supplementary Duty</label>
-                                    <input type="number" name="supplementary_duty" id="supplementary_duty"
-                                        class="form-control" step="0.01">
-                                </div>
-
-                                <div class="col-md-4 mb-2">
-                                    <label for="thc" class="form-label">Terminal Handling Charges</label>
-                                    <input type="number" name="thc" id="thc" class="form-control" step="0.01">
-                                </div>
-
-                                <div class="col-md-4 mb-2">
-                                    <label for="container_handling" class="form-label">Container Handling /
-                                        Offloading</label>
-                                    <input type="number" name="container_handling" id="container_handling"
-                                        class="form-control" step="0.01">
-                                </div>
-
-                                <div class="col-md-4 mb-2">
-                                    <label for="custom_clearance" class="form-label">Custom Clearance Fees</label>
-                                    <input type="number" name="custom_clearance" id="custom_clearance" class="form-control"
-                                        step="0.01">
-                                </div>
-
-                                <div class="col-md-4 mb-2">
-                                    <label for="documentation_charges" class="form-label">Documentation Charges</label>
-                                    <input type="number" name="documentation_charges" id="documentation_charges"
-                                        class="form-control" step="0.01">
-                                </div>
-
-                                <div class="col-md-4 mb-2">
-                                    <label for="truck_cost" class="form-label">Truck / Carrier Cost</label>
-                                    <input type="number" name="truck_cost" id="truck_cost" class="form-control"
-                                        step="0.01">
-                                </div>
-
-                                <div class="col-md-4 mb-2">
-                                    <label for="warehouse_receiving" class="form-label">Warehouse Receiving Charges</label>
-                                    <input type="number" name="warehouse_receiving" id="warehouse_receiving"
-                                        class="form-control" step="0.01">
-                                </div>
-
-                                <div class="col-md-4 mb-2">
-                                    <label for="inspection_qc" class="form-label">Inspection / QC Charges</label>
-                                    <input type="number" name="inspection_qc" id="inspection_qc" class="form-control"
-                                        step="0.01">
-                                </div>
-
-                                <div class="col-md-4 mb-2">
-                                    <label for="packaging_labeling" class="form-label">Packaging / Labeling</label>
-                                    <input type="number" name="packaging_labeling" id="packaging_labeling"
-                                        class="form-control" step="0.01">
-                                </div>
-
-                                <div class="col-md-4 mb-2">
-                                    <label for="fuel_toll" class="form-label">Fuel Surcharge</label>
-                                    <input type="number" name="fuel_toll" id="fuel_toll" class="form-control"
-                                        step="0.01">
+                                    <label for="transportation_cost" class="form-label">Transportation Cost</label>
+                                    <input type="number" name="transportation_cost" id="transportation_cost" value="{{ number_format($invoice->transportation_cost, 0) }}" class="form-control">
                                 </div>
 
                             </div>
                         </div>
                     </div>
                 </div>
-
-
+                {{-- Extra Notes --}}
+                <div class="mb-3">
+                    <label for="received_notes" class="form-label">Received Notes</label>
+                    <textarea name="received_notes" id="received_notes" class="form-control" rows="3"></textarea>
+                </div>
+                <button type="submit" class="btn btn-success">Submit Received</button>
+            </form>
         </div>
-
-        {{-- Extra Notes --}}
-        <div class="mb-3">
-            <label for="received_notes" class="form-label">Received Notes</label>
-            <textarea name="received_notes" id="received_notes" class="form-control" rows="3"></textarea>
-        </div>
-
-        <button type="submit" class="btn btn-success">Submit Received</button>
-        </form>
     </div>
+
+/div>
     </div>
-@endsection
