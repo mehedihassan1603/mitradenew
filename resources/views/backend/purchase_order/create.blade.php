@@ -54,54 +54,54 @@
         </div>
 
         <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>Product</th>
-                    <th>Qty</th>
-                    <th>Unit Price</th>
-                    <th>Total</th>
-                </tr>
-            </thead>
-            @php
-    $grandTotal = 0;
-@endphp
-
-<tbody>
-    @php $grandTotal = 0; @endphp
-    @foreach($products as $i => $productId)
-        @php
-            $qty = $quantities[$i] ?? 0;
-            $price = $prices[$i] ?? 0;
-            $rowTotal = $qty * $price;
-            $grandTotal += $rowTotal;
-        @endphp
+    <thead>
         <tr>
-            <td>{{ $productModels[$productId]->name ?? 'Unknown' }}</td>
-            <td>
-                <input type="number" name="quantities[]"
-                       class="form-control qty-input"
-                       value="{{ $qty }}" min="1">
-            </td>
-            <td>
-                <input type="text" name="prices[]"
-                       class="form-control price-input"
-                       value="{{ $price }}" readonly>
-            </td>
-            <td class="row-total">{{ $rowTotal }}</td>
-            <input type="hidden" name="product_ids[]" value="{{ $productId }}">
+            <th>Product</th>
+            <th>Qty</th>
+            <th>Unit Price</th>
+            <th>Total</th>
+            <th>Action</th>
         </tr>
-    @endforeach
-</tbody>
-<tfoot>
-    <tr>
-        <th colspan="3" class="text-right">Grand Total</th>
-        <th id="grand-total">{{ $grandTotal }}</th>
-    </tr>
-</tfoot>
+    </thead>
+    <tbody>
+        @php $grandTotal = 0; @endphp
+        @foreach($products as $i => $productId)
+            @php
+                $qty = $quantities[$i] ?? 0;
+                $price = $prices[$i] ?? 0;
+                $rowTotal = $qty * $price;
+                $grandTotal += $rowTotal;
+            @endphp
+            <tr>
+                <td>{{ $productModels[$productId]->name ?? 'Unknown' }}</td>
+                <td>
+                    <input type="number" name="quantities[]"
+                           class="form-control qty-input"
+                           value="{{ $qty }}" min="1">
+                </td>
+                <td>
+                    <input type="text" name="prices[]"
+                           class="form-control price-input"
+                           value="{{ $price }}" readonly>
+                </td>
+                <td class="row-total">{{ $rowTotal }}</td>
+                <td>
+                    <button type="button" class="btn btn-danger btn-sm remove-row">
+                        <i class="fa fa-times"></i>
+                    </button>
+                </td>
+                <input type="hidden" name="product_ids[]" value="{{ $productId }}">
+            </tr>
+        @endforeach
+    </tbody>
+    <tfoot>
+        <tr>
+            <th colspan="4" class="text-right">Grand Total</th>
+            <th id="grand-total">{{ $grandTotal }}</th>
+        </tr>
+    </tfoot>
+</table>
 
-
-
-        </table>
 
         <button type="submit" class="btn btn-success">Submit Purchase Order</button>
     </form>
@@ -114,24 +114,35 @@ document.addEventListener("DOMContentLoaded", function () {
     function calculateTotals() {
         let grandTotal = 0;
         document.querySelectorAll('tbody tr').forEach(row => {
-            let qty   = parseFloat(row.querySelector('.qty-input').value) || 0;
-            let price = parseFloat(row.querySelector('.price-input').value) || 0;
+            let qty   = parseFloat(row.querySelector('.qty-input')?.value) || 0;
+            let price = parseFloat(row.querySelector('.price-input')?.value) || 0;
             let rowTotal = qty * price;
 
-            row.querySelector('.row-total').innerText = rowTotal.toFixed(2);
+            if(row.querySelector('.row-total')){
+                row.querySelector('.row-total').innerText = rowTotal.toFixed(2);
+            }
             grandTotal += rowTotal;
         });
         document.getElementById('grand-total').innerText = grandTotal.toFixed(2);
     }
 
-    // Listen for qty changes
+    // Qty change listener
     document.querySelectorAll('.qty-input').forEach(input => {
         input.addEventListener('input', calculateTotals);
     });
 
-    // Run once at page load
+    // Row delete listener
+    document.addEventListener('click', function(e) {
+        if (e.target.closest('.remove-row')) {
+            e.target.closest('tr').remove();
+            calculateTotals(); // Recalculate after removal
+        }
+    });
+
+    // Initial calculation
     calculateTotals();
 });
+
 
 
 {{--  generate po_id method  --}}
