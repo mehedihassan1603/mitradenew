@@ -524,6 +524,10 @@ Route::get('purchase-invoice-received', [\App\Http\Controllers\InvoiceReceivedCo
     Route::resource('lcs', LCController::class);
     Route::get('/lc-show/{id}',[LCController::class,'show'])->name('lc.show');
 
+    Route::get('/all-charges/list',[\App\Http\Controllers\AllChargesList::class,'index'])->name('all.charges.list');
+    Route::post('/all-charges/store',[\App\Http\Controllers\AllChargesList::class,'store'])->name('all.charges.store');
+
+
 
     Route::resource('banks', BankController::class);
     Route::resource('exporters', ExporterController::class);

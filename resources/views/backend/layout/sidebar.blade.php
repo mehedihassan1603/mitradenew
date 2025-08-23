@@ -98,6 +98,12 @@
                             </a>
                         </li>
 
+                        <li id="all-charges-list">
+                            <a href="{{route('all.charges.list')}}">
+                                <i class="dripicons-document"></i><span>{{trans('All Charges List')}}</span>
+                            </a>
+                        </li>
+
                     </ul>
                 </li>
             @endif
