@@ -33,7 +33,7 @@
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="form-group">
-                                            <label>{{trans('Charge Name')}}</label>
+                                            <label style="font-size: 16px;">{{trans('Charges Name')}}</label>
                                             <input type="text" name="name" class="form-control" id="name" aria-describedby="name" required>
                                             <span class="validation-msg" id="name-error"></span>
                                         </div>
