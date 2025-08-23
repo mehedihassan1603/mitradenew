@@ -28,11 +28,10 @@
             }
 
             #toast-container > div {
-                width: 400px !important;   /* default প্রায় 300px */
+                width: 350px !important;   /* default প্রায় 300px */
             }
 
         </style>
-
 
 
 
@@ -1436,7 +1435,7 @@
           // Optional: Toastr options
           toastr.options = {
               "positionClass": "toast-top-right",
-              "timeOut": 3000
+              "timeOut": 2000,
           };
 
           @if(session('success'))

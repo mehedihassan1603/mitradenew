@@ -12,7 +12,7 @@
                             <h2>Purchase Requisition List</h2>
                         </div>
                         <div class="align-items-center col">
-                            <a href="{{ route('purchase.requisition.create') }}" class="float-right btn-primary">Create</a>
+                            <a href="{{ route('purchase.requisition.create') }}" class="float-right btn btn-primary">Create</a>
                         </div>
                     </div>
                     <hr class="bg-secondary"/>

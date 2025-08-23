@@ -123,11 +123,9 @@ public function approvedList()
         $deleted = RequestQuotation::where('purchase_requisition_id', $id)->delete();
 
         if ($deleted) {
-            return redirect()->route('request.quotation.index')
-                ->with('success', 'Purchase Requisition deleted successfully!');
+            return redirect()->route('request.quotation.index')->with('success', 'Purchase Requisition deleted successfully!');
         } else {
-            return redirect()->route('request.quotation.index')
-                ->with('error', 'No record found to delete!');
+            return redirect()->route('request.quotation.index')->with('error', 'No record found to delete!');
         }
     }
 
