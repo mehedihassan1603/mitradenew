@@ -289,8 +289,7 @@ Route::get('/purchase-order/{id}', [App\Http\Controllers\PurchaseOrderController
 Route::get('/purchase-invoice/create/{poId}', [App\Http\Controllers\PurchaseInvoiceController::class, 'create'])
     ->name('purchase.invoice.create');
 
-Route::post('/purchase-invoice/store', [App\Http\Controllers\PurchaseInvoiceController::class, 'store'])
-    ->name('purchase.invoice.store');
+Route::post('/purchase-invoice/store', [App\Http\Controllers\PurchaseInvoiceController::class, 'store'])->name('purchase.invoice.store');
 
 Route::get('/purchase-invoices', [App\Http\Controllers\PurchaseInvoiceController::class, 'index'])
     ->name('purchase.invoice.index');
@@ -313,8 +312,7 @@ Route::post('purchase-invoice-received/{id}/approve', [InvoiceReceivedController
 
 
 // Store received data
-Route::post('purchase-invoice-received/store', [\App\Http\Controllers\InvoiceReceivedController::class, 'store'])
-    ->name('purchase.invoice.received.store');
+Route::post('purchase-invoice-received/store', [\App\Http\Controllers\InvoiceReceivedController::class, 'store'])->name('purchase.invoice.received.store');
 
 // List received invoices
 Route::get('purchase-invoice-received', [\App\Http\Controllers\InvoiceReceivedController::class, 'index'])

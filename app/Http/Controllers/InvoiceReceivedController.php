@@ -12,54 +12,50 @@ use Illuminate\Http\Request;
 class InvoiceReceivedController extends Controller
 {
     public function store(Request $request)
-{
-    $request->validate([
-        'invoice_id'   => 'required|exists:purchase_invoices,id',
-        'received_qty' => 'required|array',
-    ]);
+    {
+        $request->validate([
+            'invoice_id'   => 'required|exists:purchase_invoices,id',
+            'received_qty' => 'required|array',
+        ]);
 
-    // Get invoice with its items
-    $invoice = PurchaseInvoice::with('items')->findOrFail($request->invoice_id);
+        // Get invoice with its items
+        $invoice = PurchaseInvoice::with('items')->findOrFail($request->invoice_id);
 
-    // Save main record
-    $received = PurchaseInvoiceReceived::create([
-        'purchase_invoice_id'   => $request->invoice_id,
-        'received_notes'        => $request->received_notes,
-        'custom_duty'           => $request->custom_duty ?? 0,
-        'vat'                   => $request->vat ?? 0,
-        'supplementary_duty'    => $request->supplementary_duty ?? 0,
-        'thc'                   => $request->thc ?? 0,
-        'container_handling'    => $request->container_handling ?? 0,
-        'custom_clearance'      => $request->custom_clearance ?? 0,
-        'documentation_charges' => $request->documentation_charges ?? 0,
-        'truck_cost'            => $request->truck_cost ?? 0,
-        'warehouse_receiving'   => $request->warehouse_receiving ?? 0,
-        'inspection_qc'         => $request->inspection_qc ?? 0,
-        'packaging_labeling'    => $request->packaging_labeling ?? 0,
-        'fuel_toll'             => $request->fuel_toll ?? 0,
-        'status'                => 0,
-    ]);
+        // Save main record
+        $received = PurchaseInvoiceReceived::create([
+            'purchase_invoice_id'   => $request->invoice_id,
+            'received_notes'        => $request->received_notes,
+            'custom_duty'           => $request->custom_duty ?? 0,
+            'vat'                   => $request->vat ?? 0,
+            'supplementary_duty'    => $request->supplementary_duty ?? 0,
+            'thc'                   => $request->thc ?? 0,
+            'container_handling'    => $request->container_handling ?? 0,
+            'custom_clearance'      => $request->custom_clearance ?? 0,
+            'documentation_charges' => $request->documentation_charges ?? 0,
+            'truck_cost'            => $request->truck_cost ?? 0,
+            'warehouse_receiving'   => $request->warehouse_receiving ?? 0,
+            'inspection_qc'         => $request->inspection_qc ?? 0,
+            'packaging_labeling'    => $request->packaging_labeling ?? 0,
+            'fuel_toll'             => $request->fuel_toll ?? 0,
+            'status'                => 0,
+        ]);
 
-    // Save item-level received qty & price
-    foreach ($request->received_qty as $itemId => $qty) {
-        $item = $invoice->items->where('id', $itemId)->first();
+        // Save item-level received qty & price
+        foreach ($request->received_qty as $itemId => $qty) {
+            $item = $invoice->items->where('id', $itemId)->first();
 
-        if ($item) {
-            PurchaseInvoiceReceivedItem::create([
-                'received_id'  => $received->id,
-                'item_id'      => $itemId,
-                'product_id'   => $item->product_id,
-                'received_qty' => $qty,
-                'unit_price'   => $item->price ?? 0,
-            ]);
+            if ($item) {
+                PurchaseInvoiceReceivedItem::create([
+                    'received_id'  => $received->id,
+                    'item_id'      => $itemId,
+                    'product_id'   => $item->product_id,
+                    'received_qty' => $qty,
+                    'unit_price'   => $item->price ?? 0,
+                ]);
+            }
         }
+        return redirect()->route('purchase.invoice.received.index')->with('success', 'Purchase Invoice Received saved successfully.');
     }
-
-    return redirect()->route('purchase.invoice.received.index')
-        ->with('success', 'Purchase Invoice Received saved successfully.');
-}
-
-
 
     public function index()
     {

@@ -35,4 +35,9 @@ class PurchaseInvoiceReceived extends Model
     {
         return $this->hasMany(PurchaseInvoiceReceivedItem::class, 'received_id');
     }
+
+    public function hscode()
+    {
+        return $this->belongsTo(HSCode::class);
+    }
 }
