@@ -10,7 +10,7 @@
                 <div class="card px-5 py-5">
                     <div class="row justify-content-between ">
                         <div class="align-items-center col">
-                            <h2>Request for Quotation Lists</h2>
+                            <h2>Request Quotation List</h2>
                         </div>
                     </div>
                     <hr class="bg-secondary"/>
@@ -45,8 +45,8 @@
                                         </td>
                                         <td>
                                             <a href="{{ route('purchase.requisition.print',['id' => $req->id ]) }}" class="btn btn-sm btn-primary">View</a>
-                                            <a href="{{ route('request.quotation.create', $req->id) }}" class="btn btn-sm btn-success">Add Supplier Quote</a>
-                                            <a href="{{ route('foreign-quotations.compare', $req->id) }}" class="btn btn-sm btn-warning">Compare Quotations</a>
+                                            <a href="{{ route('request.quotation.create', $req->id) }}" class="btn btn-sm btn-success">Add Supplier</a>
+                                            <a href="{{ route('foreign-quotations.compare', $req->id) }}" class="btn btn-sm btn-warning">Compare</a>
                                             <a href="{{ route('request-quotation.delete', $req->id) }}" class="btn btn-sm btn-danger mt-1"  onclick="return confirm('Are you sure you want to delete this requisition?')">Delete</a>
                                         </td>
                                     </tr>

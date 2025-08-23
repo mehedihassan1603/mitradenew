@@ -105,10 +105,18 @@
 @extends('backend.layout.main')
 
 <style>
+
     table.table.table-bordered.tableHead thead th {
         text-align: center;
         vertical-align: middle;
     }
+    button.btn.btn-sm.btn-success.approveBtn:hover {
+        background: #098565 !important;
+        color: #fff;
+    }
+
+
+
 </style>
 
 @section('content')
@@ -189,18 +197,43 @@
                     <th colspan="2">Grand Total</th>
                     @foreach($quotations as $quote)
                         @php $total = $totals[$quote->id]; @endphp
-                        <th colspan="2" @if($total == $minTotal) style="background: #c3e6cb; font-weight:bold;" @endif>
-                            {{ number_format($total, 2) }}
+                        <th colspan="2"
+                            @if($total == $minTotal)
+                                style="background: #c3e6cb; font-weight:bold;"
+                            @endif
+                        >
+                            <div class="d-flex justify-content-between align-items-center">
+                                {{-- Approve button left side --}}
+                                <form action="{{ route('request.quotation.approve', [$requisition->id, $quote->id]) }}" method="GET" style="margin-bottom: 0px;">
+                                    <button type="submit" class="btn btn-sm btn-success approveBtn">
+                                        Approve
+                                    </button>
+                                </form>
 
-                            {{-- Approve button --}}
-                            <form action="{{ route('request.quotation.approve', [$requisition->id, $quote->id]) }}" method="GET" class="mt-2">
-                                <button type="submit" class="btn btn-sm btn-success">
-                                    Approve
-                                </button>
-                            </form>
+                                {{-- Price right side --}}
+                                <span> = {{ number_format($total, 2) }}</span>
+                            </div>
                         </th>
                     @endforeach
                 </tr>
+
+
+                {{--                <tr>--}}
+{{--                    <th colspan="2">Grand Total</th>--}}
+{{--                    @foreach($quotations as $quote)--}}
+{{--                        @php $total = $totals[$quote->id]; @endphp--}}
+{{--                        <th colspan="2" @if($total == $minTotal) style="background: #c3e6cb; font-weight:bold;" @endif>--}}
+{{--                            {{ number_format($total, 2) }}--}}
+
+{{--                            --}}{{-- Approve button --}}
+{{--                            <form action="{{ route('request.quotation.approve', [$requisition->id, $quote->id]) }}" method="GET" class="mt-2">--}}
+{{--                                <button type="submit" class="btn btn-sm btn-success">--}}
+{{--                                    Approve--}}
+{{--                                </button>--}}
+{{--                            </form>--}}
+{{--                        </th>--}}
+{{--                    @endforeach--}}
+{{--                </tr>--}}
                 </tfoot>
             </table>
         </div>
