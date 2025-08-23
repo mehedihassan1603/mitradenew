@@ -66,7 +66,6 @@
                                             <td>{{ $key + 1 }}</td>
                                             <td>{{ $item->product->name ?? 'N/A' }} <br><strong>(Code-{{$item->product->code  }})</strong></td>
                                             <td>{{ $item->product->hscode->name }}</td>
-
                                             <td>{{ $item->quantity }}</td>
                                             <td>{{ $item->quantity }}</td>
                                             <td>{{ number_format($item->price, 2) }}</td>

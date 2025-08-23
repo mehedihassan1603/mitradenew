@@ -153,16 +153,16 @@ class PurchaseInvoiceController extends Controller
 
 
     public function received($id)
-{
-
-    $invoice = PurchaseInvoice::with([
-        'order.supplier',
-        'order.exporter',
-        'attachments',
-        'items.product.hscode', // 👈 use invoice items instead of order items
-    ])->findOrFail($id);
-    return view('backend.purchase_invoice.received', compact('invoice'));
-}
+    {
+        $invoice = PurchaseInvoice::with([
+            'order.supplier',
+            'product',
+            'order.exporter',
+            'attachments',
+            'items.product.hscode', // 👈 use invoice items instead of order items
+        ])->findOrFail($id);
+        return view('backend.purchase_invoice.received', compact('invoice'));
+    }
 
 
 

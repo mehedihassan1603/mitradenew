@@ -31,6 +31,12 @@ class PurchaseInvoice extends Model
         return $this->hasMany(PurchaseInvoiceAttachment::class);
     }
 
+//    public function product()
+//    {
+//        return $this->belongsTo(Product::class);
+//    }
+
+
 
 
 
