@@ -6,11 +6,11 @@
     {{--List form--}}
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-12 col-sm-12 col-lg-12">
-                <div class="card px-5 py-5">
+            <div class="col-md-12">
+                <div class="card" style="padding: 7px;">
                     <div class="row justify-content-between ">
                         <div class="align-items-center col">
-                            <h2>Request Quotation List</h2>
+                            <h2 class="listH2">Request Quotation List</h2>
                         </div>
                     </div>
                     <hr class="bg-secondary"/>
@@ -66,13 +66,15 @@
 
 @push('scripts')
 
-    {{--  bootstrap css and js  --}}
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    {{--  data table css and js  --}}
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
-    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-
+    <script>
+        $(document).ready(function () {
+            $('#requisitionTable').DataTable({
+                paging: true,
+                searching: true,
+                ordering:  true
+            });
+        });
+    </script>
 
 
 @endpush

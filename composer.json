@@ -25,13 +25,14 @@
         "milon/barcode": "^10.0",
         "nwidart/laravel-modules": "^8.3",
         "orangehill/iseed": "^3.0",
-        "salla/zatca": "^2.0",
         "razorpay/razorpay": "^2.9",
+        "salla/zatca": "^2.0",
         "spatie/laravel-permission": "^5.8",
         "srmklive/paypal": "^3.0",
         "stripe/stripe-php": "^7.57",
         "twilio/sdk": "^6.10",
-        "xendit/xendit-php": "^5.0"
+        "xendit/xendit-php": "^5.0",
+        "yajra/laravel-datatables-oracle": "^10.11"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.6",
