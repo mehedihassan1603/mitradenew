@@ -31,10 +31,31 @@
                 width: 350px !important;   /* default প্রায় 300px */
             }
 
+
+            .dataTables_wrapper {
+                margin-top: 10px !important;
+            }
+
+        </style>
+
+        @stack('styles')
+        <style>
+            .listH2{
+                margin-left: 20px;
+                margin-top: 20px;
+            }
+            .dataTables_wrapper {
+                margin-top: 10px !important;
+            }
+            a.float-right.btn.btn-primary {
+                margin-top: 10px;
+                margin-right: 10px;
+            }
         </style>
 
 
-
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
   <link rel="stylesheet" href="<?php echo asset('vendor/bootstrap/css/bootstrap.min.css') ?>" type="text/css">
   <link rel="preload" href="<?php echo asset('vendor/bootstrap-toggle/css/bootstrap-toggle.min.css') ?>" as="style" onload="this.onload=null;this.rel='stylesheet'">
   <noscript>
@@ -1093,15 +1114,8 @@
   <script type="text/javascript" src="<?php echo asset('vendor/jquery/jquery.timepicker.min.js') ?>"></script>
   <script type="text/javascript" src="<?php echo asset('vendor/popper.js/umd/popper.min.js') ?>"></script>
 
-
-
   <script src="{{ asset('sweetalert2/sweetalert2.min.js') }}"></script>
   <script src="{{ asset('toastr/toastr.min.js') }}"></script>
-
-
-
-
-
 
   <script type="text/javascript" src="<?php echo asset('vendor/bootstrap/js/bootstrap.min.js') ?>"></script>
   <script type="text/javascript" src="<?php echo asset('vendor/bootstrap-toggle/js/bootstrap-toggle.min.js') ?>"></script>
@@ -1427,7 +1441,8 @@
 
   </script>
 
-
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 {{--  toastr start--}}
   <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
   <script>

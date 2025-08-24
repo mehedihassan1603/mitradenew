@@ -526,6 +526,9 @@ Route::get('purchase-invoice-received', [\App\Http\Controllers\InvoiceReceivedCo
 
     Route::get('/all-charges/list',[\App\Http\Controllers\AllChargesList::class,'index'])->name('all.charges.list');
     Route::post('/all-charges/store',[\App\Http\Controllers\AllChargesList::class,'store'])->name('all.charges.store');
+    Route::get('/all-charges/edit',[\App\Http\Controllers\AllChargesList::class,'edit'])->name('all.charges.edit');
+    Route::get('/all-charges/update',[\App\Http\Controllers\AllChargesList::class,'update'])->name('all.charges.update');
+    Route::post('/all-charges/delete',[\App\Http\Controllers\AllChargesList::class,'delete'])->name('all.charges.delete');
 
 
 
